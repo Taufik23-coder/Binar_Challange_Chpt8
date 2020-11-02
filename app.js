@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 // Swagger
-app.listen('docs', swaggerUI.serve, swaggerUI.setup(swaggerJSON));
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJSON))
 
 const db = require("./app/models");
 db.client.sync();
