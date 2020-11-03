@@ -19,7 +19,7 @@ exports.create = (req, res) => {
     email: req.body.email,
     password: req.body.password, // reminder : it is bad practice to store password in plain text
     experience: req.body.exp ? req.body.exp : 0,
-    lvl: req.body.exp ? Math.floor(req.body.exp/LEVEL_BAR) : 0
+    lvl: req.body.exp ? Math.floor(req.body.exp / LEVEL_BAR) : 0
   };
 
   Player.create(player)
@@ -42,27 +42,28 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   let conditions = []
   if (req.query.username) {
-    conditions.push({ username : req.query.username});
+    conditions.push({ username: req.query.username });
   }
   if (req.query.email) {
-    conditions.push({ email : req.query.email });
+    conditions.push({ email: req.query.email });
   }
   if (req.query.experience) {
-    conditions.push({ experience : req.query.experience });
+    conditions.push({ experience: req.query.experience });
   }
   if (req.query.lvl) {
-    conditions.push({ lvl : req.query.lvl });
+    conditions.push({ lvl: req.query.lvl });
   }
 
-  Player.findAll({ 
+  Player.findAll({
     where: {
-      [Op.and] : conditions
-    } 
-    })
+      [Op.and]: conditions
+    }
+  })
     .then(data => {
       res.status(200).json({
         result: "SUCCESS",
         message: data
+
       });
     })
     .catch(err => {
@@ -107,23 +108,23 @@ exports.getExperience = (req, res) => {
   Player.findByPk(id)
     .then(player => {
       let expValue = player.experience + parseInt(req.body.exp);
-      let lvlValue = (Math.floor(expValue/LEVEL_BAR) == player.lvl) ? player.lvl : player.lvl+1;
-      Player.update({ experience : expValue, lvl : lvlValue }, {
+      let lvlValue = (Math.floor(expValue / LEVEL_BAR) == player.lvl) ? player.lvl : player.lvl + 1;
+      Player.update({ experience: expValue, lvl: lvlValue }, {
         where: { id: id }
       })
-      .then(num => {
-        if (num == 1) {
-          res.status(200).json({
-            result: "SUCCESS",
-            message: `Player with id=${id} has more experience.`
-          });
-        } else {
-          res.status(400).json({
-            result: "FAILED",
-            message: `Cannot update Player with id=${id}!`
-          });
-        }
-      });   
+        .then(num => {
+          if (num == 1) {
+            res.status(200).json({
+              result: "SUCCESS",
+              message: `Player with id=${id} has more experience.`
+            });
+          } else {
+            res.status(400).json({
+              result: "FAILED",
+              message: `Cannot update Player with id=${id}!`
+            });
+          }
+        });
     })
     .catch(err => {
       res.status(500).json({
